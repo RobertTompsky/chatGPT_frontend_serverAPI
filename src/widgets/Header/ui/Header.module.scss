@@ -1,0 +1,42 @@
+.header {
+    display: flex;
+    height: var(--header-height);
+
+    &_content {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .header_nav {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .header_profile {
+            position: relative;
+
+            &_image {
+                width: 50px;
+                height: 50px;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .header {
+        &_title {
+            display: none;
+        }
+
+        &_nav {
+            width: 100%;
+        }
+    }
+}

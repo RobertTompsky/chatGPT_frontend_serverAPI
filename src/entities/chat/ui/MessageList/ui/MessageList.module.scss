@@ -1,0 +1,16 @@
+.messageList {
+    max-height: 650px;
+    overflow-x: auto;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+}
+
+@media screen and (max-width: 390px) {
+    .messageList {
+        max-height: 490px;
+        gap: 14px;
+    }
+}

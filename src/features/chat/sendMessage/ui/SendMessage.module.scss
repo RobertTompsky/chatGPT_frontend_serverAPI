@@ -1,0 +1,17 @@
+.inputBlock {
+    width: 100%;
+    gap: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+@media screen and (max-width: 750px) {
+    .inputBlock {
+        flex-direction: column;
+        gap: 10px;
+
+        button {
+            width: 100%;
+        }
+    }
+}

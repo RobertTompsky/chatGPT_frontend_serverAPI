@@ -1,0 +1,49 @@
+.button {
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    border: 0;
+    color: white;
+    line-height: 1.15;
+    font-family: "Anonymous Pro", monospace;
+    
+    &:active{
+        outline: none;
+        box-shadow: 0 0 0 0 #fff inset, #33FF33 0 0 0 0.25px;
+    }
+    
+
+    &:disabled {
+        opacity: 0.5;
+        box-shadow: none;
+    }
+
+}
+
+.default {
+    background: #FFA500;
+}
+
+.approve {
+    background:  #33FF33;
+}
+
+.delete {
+    background: #FF3333;
+}
+
+.small {
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+.medium {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.large {
+    padding: 14px 28px;
+    font-size: 20px;
+}

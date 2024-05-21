@@ -1,0 +1,33 @@
+.curChat {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_settings {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+
+        .curChat_group {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .curChat_btns {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 4px;
+            }
+        }
+    }
+
+    &_changePrompt {
+        width: 50%;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+    }
+}

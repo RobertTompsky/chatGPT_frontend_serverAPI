@@ -1,0 +1,32 @@
+.container {
+    width: 1000px;
+    margin-right: auto;
+    margin-left: auto;
+    height: 100%;
+    position: relative;
+    padding: 20px 0;
+}
+
+.centeredChildren {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media screen and (max-width: 1100px) {
+    .container {
+        width: 700px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .container {
+        width: 450px;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .container {
+        width: 300px;
+    }
+}

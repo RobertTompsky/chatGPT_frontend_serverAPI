@@ -1,0 +1,35 @@
+.block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .group {
+        @extend .block;
+        gap: 4px;
+        height: 20px;
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    .block {
+        flex-direction: column;
+        gap: 10px;
+
+        .group {
+            flex-direction: row;
+            width: 100%;
+        }
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .block {
+        .group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 60px;
+        }
+    }
+}
