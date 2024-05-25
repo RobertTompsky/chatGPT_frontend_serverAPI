@@ -13,6 +13,7 @@ export const CreateChat: React.FC = () => {
         id: '',
         name: '',
         messages: [],
+        systemPrompt: '',
         isActive: false,
         isGPTTyping: false
     })
@@ -24,6 +25,7 @@ export const CreateChat: React.FC = () => {
             id: uuidv4(),
             name: chat.name,
             messages: [],
+            systemPrompt: 'Ты дружелюбный мусульманин. На приветствие ты отвечаешь полным исламским приветствием. В конце своего ответа ты всегда говоришь, что Аллах велик',
             isActive: true,
             isGPTTyping: false
         }))

@@ -1,14 +1,17 @@
+import { RootState } from "@/shared/lib/types";
 import {
-    GPTModel,
+    PayloadAction,
+    createAsyncThunk,
+    createSlice
+} from "@reduxjs/toolkit";
+import {
     IChat,
     IMessage
-} from "@/entities/chat/model/types/types";
-import { RootState } from "@/shared/lib/types";
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+} from "..";
 
 interface IChatsState {
     list: IChat[],
-    model: GPTModel,
+    model: string,
     query: string
 }
 
@@ -17,6 +20,7 @@ const initialState: IChatsState = {
         id: 'gdsgdsdgs-34324-sdfs',
         name: 'Дефолтный чат',
         messages: [],
+        systemPrompt: 'You are a friendly assistant',
         isActive: true,
         isGPTTyping: false
     }],
@@ -77,7 +81,7 @@ const chatSlice = createSlice({
                 currentChat.messages[currentChat.messages.length - 1].content += action.payload
             }
         },
-        changeModel: (state, action: PayloadAction<GPTModel>) => {
+        changeModel: (state, action: PayloadAction<string>) => {
             state.model = action.payload
         },
         searchMessage: (state, action: PayloadAction<string>) => {
@@ -86,14 +90,24 @@ const chatSlice = createSlice({
     }
 })
 
+export interface IRequest {
+    messages: IMessage[],
+    model: string,
+    systemPrompt: string
+}
+
 export const sendMessageThunk = createAsyncThunk(
     'chat/sendMessage',
-    async (messagesToSend: IMessage[], { dispatch }) => {
+    async (req: IRequest, { dispatch }) => {
+
+        const {messages, model, systemPrompt} = req
 
         const response = await fetch("http://127.0.0.1:3000/chat/send_message", {
             method: 'POST',
             body: JSON.stringify({ 
-                messages: messagesToSend 
+                messages,
+                model,
+                systemPrompt
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -101,10 +115,10 @@ export const sendMessageThunk = createAsyncThunk(
         });
 
         const rs = response.body as ReadableStream<Uint8Array>;
-
         const reader = rs.getReader();
         const decoder = new TextDecoder("utf-8");
 
+        dispatch(setGPTTyping(false))
         dispatch(addMessage({
             role: 'ai' as 'ai',
             content: ''
@@ -143,7 +157,15 @@ export const getChatMessages
         .find((chat) => chat.isActive === true)
         ?.messages
 
+export const getModel
+    = (state: RootState) => state.chats.model
+
 export const getGPTTyping
     = (state: RootState) => state.chats.list
         .find((chat) => chat.isActive === true)
         ?.isGPTTyping
+
+export const getSystemPrompt
+    = (state: RootState) => state.chats.list
+        .find((chat) => chat.isActive === true)
+        ?.systemPrompt

@@ -7,6 +7,7 @@ import {
     DeleteChat,
     SearchMessage
 } from '@/features/chat';
+import { Button } from '@/shared/ui/components';
 
 export const ChatManagement: React.FC = () => {
     return (
@@ -16,6 +17,7 @@ export const ChatManagement: React.FC = () => {
                 <SearchMessage />
                 <ChangeChat />
                 <ChangeModel />
+                <Button children='Промпт' btnSize='small'/>
                 <DeleteChat />
             </div>
         </section>

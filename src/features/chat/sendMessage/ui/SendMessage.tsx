@@ -7,13 +7,13 @@ import {
 } from '@/entities/chat/model';
 import styles from './SendMessage.module.scss'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
-import { useGetAnswerMutation } from '@/entities/chat/api/chatApi/chatApi';
-import { sendMessageThunk, streamGPTMessage } from '@/entities/chat/model/slices/chatsSlice';
+import { getModel, getSystemPrompt, sendMessageThunk, setGPTTyping } from '@/entities/chat/model/slices/chatsSlice';
 
 export const SendMessage: React.FC = () => {
-    const [getAnswer] = useGetAnswerMutation()
     const dispatch = useAppDispatch()
     const chatMessages = useAppSelector(getChatMessages) as IMessage[]
+    const chatModel = useAppSelector(getModel)
+    const chatPrompt = useAppSelector(getSystemPrompt)
     const [userMessage, setUserMessage] = useState<string>('')
 
     const sendUserMessage =
@@ -29,12 +29,18 @@ export const SendMessage: React.FC = () => {
                 role: 'human' as 'human'
             };
 
-            dispatch(addMessage(newMessage))
-
             setUserMessage('');
 
+            dispatch(addMessage(newMessage))
+            dispatch(setGPTTyping(true))
+
             const messagesToSend = [...chatMessages, newMessage]
-            dispatch(sendMessageThunk(messagesToSend))
+
+            dispatch(sendMessageThunk({
+                messages: messagesToSend,
+                model: chatModel,
+                systemPrompt: chatPrompt as string
+            }))
         };
 
     return (

@@ -11,14 +11,15 @@ export {
     searchMessage,
     getChats,
     getChatMessages,
-    getGPTTyping
+    getGPTTyping,
+    getModel,
+    getSystemPrompt
 } from './slices/chatsSlice'
 
 export type {
     IMessage,
     IChat,
     IChatBody,
-    GPTModel,
-    ModelObj
+    IChatModel
 } from './types/types'
 
