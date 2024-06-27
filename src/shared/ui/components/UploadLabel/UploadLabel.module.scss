@@ -1,22 +1,17 @@
 .uploadLabel {
-    box-sizing: border-box;
-    box-shadow: inset #abacaf 0 0 0 2px;
+    background-color:  #252526;
+    border: none;
     position: relative;
-    border-radius: 3px;
-    padding: 12px 12px;
-    color: rgb(0, 0, 0);
-    font-size: 16px;
-    font-weight: 400;
-    transition: all .2s ease;
+    color: #333333;
+    width: 100%;
+    color: white;
+    font-family: "Anonymous Pro", monospace;
+    padding: 8px;
+    cursor: pointer;
     text-align: center;
-
-    &:hover{
-        box-shadow: 0 0 0 0 #fff inset, #1de9b6 0 0 0 2px;
-    }
-    
-    &:focus{
-        background: #fff;
-        outline: 0;
-        box-shadow: 0 0 0 0 #fff inset, #1de9b6 0 0 0 3px;
+   
+    &:hover {
+        outline: none;
+        box-shadow: 0 0 0 0 #fff inset, #33FF33 0 0 0 0.25px;
     }
 }

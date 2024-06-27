@@ -7,9 +7,11 @@ export type IChat = {
     id: string
     name: string
     messages: IMessage[]
+    memoryLength: number
     systemPrompt: string
     isActive: boolean
-    isGPTTyping: boolean
+    isGPTTyping: boolean,
+    displayedField: string
 }
 
 export type IChatBody = Omit<IChat, 'id'>

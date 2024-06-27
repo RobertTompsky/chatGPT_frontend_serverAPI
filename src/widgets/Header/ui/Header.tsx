@@ -18,9 +18,7 @@ export const Header: React.FC = () => {
             <Container>
                 <div className={styles.header_content}>
 
-                    <h2 className={styles.header_title}>
-                        NapasGPT
-                    </h2>
+                    <h2 className={styles.header_title}>NapasGPT</h2>
 
                     {isAuthed &&
                         <nav className={styles.header_nav}>
@@ -30,7 +28,7 @@ export const Header: React.FC = () => {
                                 fontSize='medium'
                             />
                             <AppLink
-                                to={RoutePath.profile}
+                                to={RoutePath.database}
                                 children='База данных'
                                 fontSize='medium'
                             />

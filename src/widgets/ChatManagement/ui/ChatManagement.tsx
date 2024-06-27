@@ -17,7 +17,6 @@ export const ChatManagement: React.FC = () => {
                 <SearchMessage />
                 <ChangeChat />
                 <ChangeModel />
-                <Button children='Промпт' btnSize='small'/>
                 <DeleteChat />
             </div>
         </section>

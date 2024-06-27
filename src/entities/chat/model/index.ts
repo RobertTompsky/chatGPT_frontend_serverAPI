@@ -1,4 +1,4 @@
-export { MODELS } from './data'
+export { MODELS, FIELDS, MEMORY_LENGTH } from './data/data'
 
 export {
     chatReducer,
@@ -7,13 +7,18 @@ export {
     setGPTTyping,
     removeChat,
     addMessage,
+    editPrompt,
     changeModel,
+    changeMemoryLength,
     searchMessage,
+    changeDisplayedField,
     getChats,
     getChatMessages,
     getGPTTyping,
     getModel,
-    getSystemPrompt
+    getSystemPrompt,
+    getDisplayedField,
+    getMemoryLength
 } from './slices/chatsSlice'
 
 export type {

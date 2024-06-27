@@ -6,8 +6,8 @@ import {
     getChatMessages,
     getGPTTyping
 } from '@/entities/chat/model';
-import { Message } from '../../Message';
 import { useAppSelector } from '@/shared/lib/hooks';
+import { Message } from '../..';
 
 export const MessageList: React.FC = () => {
     const chatMessages = useAppSelector(getChatMessages) as IMessage[]

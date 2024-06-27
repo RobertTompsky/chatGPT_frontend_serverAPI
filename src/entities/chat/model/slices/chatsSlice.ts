@@ -20,9 +20,11 @@ const initialState: IChatsState = {
         id: 'gdsgdsdgs-34324-sdfs',
         name: 'Дефолтный чат',
         messages: [],
+        memoryLength: 2,
         systemPrompt: 'You are a friendly assistant',
         isActive: true,
-        isGPTTyping: false
+        isGPTTyping: false,
+        displayedField: 'request'
     }],
     model: 'gpt-3.5-turbo-0125',
     query: ''
@@ -81,8 +83,29 @@ const chatSlice = createSlice({
                 currentChat.messages[currentChat.messages.length - 1].content += action.payload
             }
         },
+        changeMemoryLength: (state, action: PayloadAction<number>) => {
+            const currentChat = state.list
+                .find((chat) => chat.isActive === true)
+            if (currentChat) {
+                currentChat.memoryLength = action.payload
+            }
+        },
+        editPrompt: (state, action: PayloadAction<string>) => {
+            const currentChat = state.list
+                .find((chat) => chat.isActive === true)
+            if (currentChat) {
+                currentChat.systemPrompt = action.payload
+            }
+        },
         changeModel: (state, action: PayloadAction<string>) => {
             state.model = action.payload
+        },
+        changeDisplayedField: (state, action: PayloadAction<string>) => {
+            const currentChat = state.list
+                .find((chat) => chat.isActive === true)
+            if (currentChat) {
+                currentChat.displayedField = action.payload
+            }
         },
         searchMessage: (state, action: PayloadAction<string>) => {
             state.query = action.payload
@@ -99,44 +122,45 @@ export interface IRequest {
 export const sendMessageThunk = createAsyncThunk(
     'chat/sendMessage',
     async (req: IRequest, { dispatch }) => {
+        try {
+            const { messages, model, systemPrompt } = req
 
-        const {messages, model, systemPrompt} = req
+            const response = await fetch("http://127.0.0.1:3001/chat/send_message", {
+                method: 'POST',
+                body: JSON.stringify({
+                    messages,
+                    model,
+                    systemPrompt
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        const response = await fetch("http://127.0.0.1:3000/chat/send_message", {
-            method: 'POST',
-            body: JSON.stringify({ 
-                messages,
-                model,
-                systemPrompt
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+            const rs = response.body as ReadableStream<Uint8Array>;
+            const reader = rs.getReader();
+            const decoder = new TextDecoder("utf-8");
 
-        const rs = response.body as ReadableStream<Uint8Array>;
-        const reader = rs.getReader();
-        const decoder = new TextDecoder("utf-8");
+            dispatch(setGPTTyping(false))
+            dispatch(addMessage({
+                role: 'ai' as 'ai',
+                content: ''
+            }));
 
-        dispatch(setGPTTyping(false))
-        dispatch(addMessage({
-            role: 'ai' as 'ai',
-            content: ''
-        }));
-
-        while (true) {
-            const { value, done } = await reader.read();
-            const chunk = decoder.decode(value, { stream: true });
-            console.log("decoded chunk : ", chunk);
-            dispatch(streamGPTMessage(chunk));
-            if (done) break;
+            while (true) {
+                const { value, done } = await reader.read();
+                const chunk = decoder.decode(value, { stream: true });
+                console.log("decoded chunk : ", chunk);
+                dispatch(streamGPTMessage(chunk));
+                if (done) break;
+            }
+        } catch (error) {
+            console.error(error)
         }
     }
 );
 
-
-export const chatReducer
-    = chatSlice.reducer
+export const chatReducer = chatSlice.reducer
 
 export const {
     createChat,
@@ -144,9 +168,12 @@ export const {
     removeChat,
     addMessage,
     streamGPTMessage,
+    editPrompt,
     changeModel,
+    changeMemoryLength,
     setGPTTyping,
-    searchMessage
+    searchMessage,
+    changeDisplayedField
 } = chatSlice.actions
 
 export const getChats
@@ -169,3 +196,13 @@ export const getSystemPrompt
     = (state: RootState) => state.chats.list
         .find((chat) => chat.isActive === true)
         ?.systemPrompt
+
+export const getDisplayedField
+    = (state: RootState) => state.chats.list
+        .find((chat) => chat.isActive === true)
+        ?.displayedField
+
+export const getMemoryLength
+    = (state: RootState) => state.chats.list
+        .find((chat) => chat.isActive === true)
+        ?.memoryLength

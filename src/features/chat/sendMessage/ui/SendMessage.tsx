@@ -3,17 +3,22 @@ import React, { useState } from 'react';
 import {
     IMessage,
     addMessage,
-    getChatMessages
+    getChatMessages,
+    getMemoryLength,
+    getModel,
+    getSystemPrompt,
+    setGPTTyping
 } from '@/entities/chat/model';
 import styles from './SendMessage.module.scss'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
-import { getModel, getSystemPrompt, sendMessageThunk, setGPTTyping } from '@/entities/chat/model/slices/chatsSlice';
+import { sendMessageThunk } from '@/entities/chat/model/slices/chatsSlice';
 
 export const SendMessage: React.FC = () => {
     const dispatch = useAppDispatch()
     const chatMessages = useAppSelector(getChatMessages) as IMessage[]
     const chatModel = useAppSelector(getModel)
     const chatPrompt = useAppSelector(getSystemPrompt)
+    const chatMemoryLengh = useAppSelector(getMemoryLength) as number
     const [userMessage, setUserMessage] = useState<string>('')
 
     const sendUserMessage =
@@ -34,7 +39,10 @@ export const SendMessage: React.FC = () => {
             dispatch(addMessage(newMessage))
             dispatch(setGPTTyping(true))
 
-            const messagesToSend = [...chatMessages, newMessage]
+            const lastHistory = chatMessages.slice(-chatMemoryLengh)
+            const messagesToSend = [...lastHistory, newMessage]
+
+            console.log(messagesToSend)
 
             dispatch(sendMessageThunk({
                 messages: messagesToSend,
@@ -44,7 +52,7 @@ export const SendMessage: React.FC = () => {
         };
 
     return (
-        <div className={styles.inputBlock}>
+        <div className={styles.sendMessage}>
             <TextArea
                 placeholder='Введите сообщение...'
                 onChange={(e) => setUserMessage(e.target.value)}

@@ -2,9 +2,7 @@ import { chatReducer } from "@/entities/chat/model";
 import { authReducer } from "@/entities/user/model";
 import { api } from "@/shared/api";
 import { combineReducers } from "@reduxjs/toolkit";
-import {
-    persistReducer,
-} from 'redux-persist'
+import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {

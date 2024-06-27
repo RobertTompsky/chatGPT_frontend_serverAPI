@@ -4,30 +4,25 @@
     flex-direction: column;
     gap: 20px;
 
-    &_settings {
+    &_bottom {
         display: flex;
         flex-direction: row;
         gap: 20px;
-
-        .curChat_group {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-
-            .curChat_btns {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-                gap: 4px;
-            }
-        }
     }
 
-    &_changePrompt {
-        width: 50%;
+    &_settings {
         display: flex;
-        flex-direction: row;
-        gap: 10px;
+        flex-direction: column;
+        width: 15%;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    &_prompt {
+        position: absolute;
+        display: flex;
+        
+        bottom: -70px;
+        width: 500px;
     }
 }

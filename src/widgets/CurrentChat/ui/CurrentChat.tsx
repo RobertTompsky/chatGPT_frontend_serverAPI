@@ -1,17 +1,24 @@
 import {
     IChat,
     getChatMessages,
-    getChats
+    getChats,
+    getDisplayedField
 } from '@/entities/chat/model';
 import React from 'react';
 import styles from './CurrentChat.module.scss'
-import { MessageList } from '@/entities/chat/ui/MessageList';
-import { SendMessage } from '@/features/chat';
+import { 
+    ChangeDisplayedField, 
+    ChangeMemoryLength, 
+    EditPrompt, 
+    SendMessage 
+} from '@/features/chat';
 import { useAppSelector } from '@/shared/lib/hooks';
+import { MessageList } from '@/entities/chat/ui';
 
 export const CurrentChat: React.FC = () => {
     const chats: IChat[] = useAppSelector(getChats)
     const messages = useAppSelector(getChatMessages)
+    const displayedField = useAppSelector(getDisplayedField)
 
     return (
         <>
@@ -24,7 +31,17 @@ export const CurrentChat: React.FC = () => {
                         messages.length > 0 &&
                         <MessageList />
                     }
-                    <SendMessage />
+                    <div className={styles.curChat_bottom}>
+                        <div className={styles.curChat_settings}>
+                            <ChangeDisplayedField />
+                            <ChangeMemoryLength />
+                        </div>
+                        {
+                            displayedField && displayedField === 'request'
+                                ? <SendMessage />
+                                : <EditPrompt />
+                        }
+                    </div>
                 </section>
             ))}
         </>

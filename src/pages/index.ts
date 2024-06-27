@@ -1,3 +1,4 @@
+export { Database } from "./Database";
 export { SignIn } from "./SignIn/ui/SignIn";
 export { NotFound } from "./NotFound/NotFound";
 export { Profile } from "./Profile/Profile";

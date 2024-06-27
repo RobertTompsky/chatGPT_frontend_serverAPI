@@ -13,10 +13,10 @@
         box-shadow: 0 0 0 0 #fff inset, #33FF33 0 0 0 0.25px;
     }
     
-
     &:disabled {
         opacity: 0.5;
         box-shadow: none;
+        cursor: auto;
     }
 
 }

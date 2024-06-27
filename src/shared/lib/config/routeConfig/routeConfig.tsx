@@ -1,5 +1,6 @@
 import {
     About,
+    Database,
     Main,
     Profile,
     SignIn
@@ -17,7 +18,8 @@ enum AppRoutes {
     // приватные
     MAIN = 'main',
     ABOUT = 'about',
-    PROFILE = 'profile'
+    PROFILE = 'profile',
+    DATABASE = 'database'
 }
 
 export const RoutePath: Record<AppRoutes, string> = {
@@ -25,7 +27,8 @@ export const RoutePath: Record<AppRoutes, string> = {
 
     [AppRoutes.MAIN]: '/',
     [AppRoutes.ABOUT]: 'about',
-    [AppRoutes.PROFILE]: '/profile'
+    [AppRoutes.PROFILE]: '/profile',
+    [AppRoutes.DATABASE]: '/database'
 }
 
 export const RouteConfig: Record<AppRoutes, RouteObject> = {
@@ -33,7 +36,6 @@ export const RouteConfig: Record<AppRoutes, RouteObject> = {
         path: RoutePath.sign_in,
         Component: SignIn
     },
-
 
     [AppRoutes.MAIN]: {
         index: true,
@@ -46,6 +48,10 @@ export const RouteConfig: Record<AppRoutes, RouteObject> = {
     [AppRoutes.PROFILE]: {
         path: RoutePath.profile,
         Component: Profile
+    },
+    [AppRoutes.DATABASE]: {
+        path: RoutePath.database,
+        Component: Database
     }
 }
 

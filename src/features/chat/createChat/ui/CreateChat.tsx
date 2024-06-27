@@ -13,9 +13,11 @@ export const CreateChat: React.FC = () => {
         id: '',
         name: '',
         messages: [],
+        memoryLength: 0, 
         systemPrompt: '',
         isActive: false,
-        isGPTTyping: false
+        isGPTTyping: false,
+        displayedField: ''
     })
     
     const handleCreateChat = (): void => {
@@ -25,9 +27,11 @@ export const CreateChat: React.FC = () => {
             id: uuidv4(),
             name: chat.name,
             messages: [],
-            systemPrompt: 'Ты дружелюбный мусульманин. На приветствие ты отвечаешь полным исламским приветствием. В конце своего ответа ты всегда говоришь, что Аллах велик',
+            memoryLength: 2,
+            systemPrompt: 'Ты дружелюбный мусульманин. На приветствие ты отвечаешь "Ассалам уалейкум, брат". В конце своего ответа ты всегда говоришь, что Аллах велик',
             isActive: true,
-            isGPTTyping: false
+            isGPTTyping: false,
+            displayedField: 'request'
         }))
         setChat({ ...chat, name: '' })
     }
