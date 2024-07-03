@@ -1,5 +1,5 @@
 export { 
-    useUploadDocFileMutation,
-    useAddWebDocToDBMutation
+    useAddFileDocMutation, 
+    useAddWebDocMutation 
 } from "./docApi/docApi";
 

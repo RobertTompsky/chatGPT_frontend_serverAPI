@@ -1,6 +1,6 @@
 import {
-    useAddWebDocToDBMutation,
-    useUploadDocFileMutation
+    useAddFileDocMutation,
+    useAddWebDocMutation
 } from '@/entities/doc/api';
 import { 
     handleInputChange, 
@@ -30,13 +30,13 @@ export const CreateDoc: React.FC = () => {
     const [uploadDocFile, {
         isLoading: isFileLoading,
         isSuccess: isFileSuccess
-    }] = useUploadDocFileMutation()
+    }] = useAddFileDocMutation()
 
     const [addWebDocToDB, {
         isLoading: isWebLoading,
         isSuccess: isWebSuccess
-    }] = useAddWebDocToDBMutation()
-    console.log(doc.type)
+    }] = useAddWebDocMutation()
+
     const uploadDoc = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const formData = new FormData()
@@ -66,7 +66,7 @@ export const CreateDoc: React.FC = () => {
     return (
         <Form
             title='Дополнить базу'
-            width='400px'
+            width='35%'
             encType='multipart/form-data'
             onSubmit={uploadDoc}
         >

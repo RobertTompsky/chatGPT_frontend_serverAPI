@@ -1,20 +1,26 @@
-export { MODELS, FIELDS, MEMORY_LENGTH } from './data/data'
+export { 
+    MODELS, 
+    FIELDS, 
+    MEMORY_LENGTH 
+} from './data/data'
 
 export {
     chatReducer,
     createChat,
     setChatActive,
-    setGPTTyping,
+    setChatAITyping,
     removeChat,
-    addMessage,
+    addChatMessage,
     editPrompt,
     changeModel,
     changeMemoryLength,
     searchMessage,
     changeDisplayedField,
-    getChats,
+    setInitialState,
+    streamChatAIMessage,
+    getChatsByType,
     getChatMessages,
-    getGPTTyping,
+    getChatAIProcessing,
     getModel,
     getSystemPrompt,
     getDisplayedField,
@@ -23,8 +29,12 @@ export {
 
 export type {
     IMessage,
+    IChatType,
+    IChatDisplayedField,
     IChat,
     IChatBody,
-    IChatModel
+    IChatRequest,
+    IQaRequest,
+    IChatFeatureProps
 } from './types/types'
 

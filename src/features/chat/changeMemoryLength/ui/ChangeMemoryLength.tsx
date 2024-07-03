@@ -1,30 +1,39 @@
-import { 
-    MEMORY_LENGTH, 
-    changeMemoryLength, 
-    getMemoryLength 
+import {
+    IChat,
+    IChatFeatureProps,
+    MEMORY_LENGTH,
+    changeMemoryLength,
+    getMemoryLength
 } from '@/entities/chat/model';
-import { 
-    useAppDispatch, 
-    useAppSelector 
+import {
+    useAppDispatch,
+    useAppSelector
 } from '@/shared/lib/hooks';
 import { Select } from '@/shared/ui/components';
 import React from 'react';
 
-export const ChangeMemoryLength: React.FC = () => {
+export const ChangeMemoryLength: React.FC<IChatFeatureProps> = ({ chatType }) => {
     const dispatch = useAppDispatch()
-    const memoryLength = useAppSelector(getMemoryLength)
+    const chatMemoryLength = useAppSelector((state) =>
+        getMemoryLength(state, chatType)) as number
+
+    const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+        const length = Number(e.target.value)
+        dispatch(changeMemoryLength({
+            chatType,
+            length
+        }))
+    }
 
     return (
         <Select
             defaultOptionTitle='Выбрать память'
-            options={MEMORY_LENGTH.map((model) => ({
-                value: model.value,
-                title: model.title
+            options={MEMORY_LENGTH.map(({title, value}) => ({
+                value,
+                title
             }))}
-            value={memoryLength}
-            onChange={(e) => { 
-                dispatch(changeMemoryLength(Number(e.target.value)))
-            }}
+            value={chatMemoryLength}
+            onChange={handleChange}
         />
     );
 };

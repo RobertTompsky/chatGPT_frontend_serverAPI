@@ -1,17 +1,21 @@
-import { IChatModel } from "../types/types";
-
-export const MODELS: IChatModel[] = [
+export const MODELS: {
+    title: string, 
+    value: string
+}[] = [
     {
-        title: 'GPT-4',
-        model: 'gpt-4o'
+        title: 'GPT-4o',
+        value: 'gpt-4o'
     },
     {
         title: 'GPT-3.5',
-        model: 'gpt-3.5-turbo-0125'
+        value: 'gpt-3.5-turbo-0125'
     }
 ]
 
-export const FIELDS: {title: string, value: string}[] = [
+export const FIELDS: {
+    title: string, 
+    value: 'request' | 'prompt'
+}[] = [
     {
         title: 'Запрос',
         value: 'request'
@@ -22,7 +26,10 @@ export const FIELDS: {title: string, value: string}[] = [
     }
 ]
 
-export const MEMORY_LENGTH: {title: string, value: number}[] = [
+export const MEMORY_LENGTH: {
+    title: string, 
+    value: number
+}[] = [
     {
         title: '2 сообщения',
         value: 2,

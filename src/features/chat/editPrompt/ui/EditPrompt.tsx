@@ -18,7 +18,10 @@ export const EditPrompt: React.FC = () => {
                 onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault(); // Предотвращаем перенос строки
-                        dispatch(editPrompt(textValue))
+                        dispatch(editPrompt({
+                            chatType: 'chat',
+                            prompt: textValue
+                        }))
                     }
                 }}
                 style={{ width: '80%' }}
@@ -26,7 +29,10 @@ export const EditPrompt: React.FC = () => {
             <Button
                 children='Сохранить промпт'
                 variant='approve'
-                onClick={() => dispatch(editPrompt(textValue))}
+                onClick={() => dispatch(editPrompt({
+                    chatType: 'chat',
+                    prompt: textValue
+                }))}
                 btnSize='small'
                 disabled={textValue === prompt}
             />

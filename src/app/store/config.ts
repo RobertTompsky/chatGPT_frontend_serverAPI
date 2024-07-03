@@ -14,9 +14,12 @@ const persistConfig = {
 const initialReducers = {
     [api.reducerPath]: api.reducer,
     auth: authReducer,
-    chats: chatReducer,
+    chats: chatReducer
 };
 
 const rootReducer = combineReducers(initialReducers)
 
-export const persistedReducer = persistReducer(persistConfig, rootReducer)
+export const persistedReducer = persistReducer(
+    persistConfig, 
+    rootReducer
+)

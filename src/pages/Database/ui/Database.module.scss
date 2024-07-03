@@ -3,4 +3,36 @@
     flex-direction: row;
     gap: 20px;
     height: calc(100vh - 110px);
+
+    .qaChat {
+        display: flex;
+        flex-direction: column;
+        width: 65%;
+        gap: 20px;
+
+        .head {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .sendMessage {
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            width: 100%;
+
+            .settings {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    h2 {
+        margin: 0;
+    }
 }

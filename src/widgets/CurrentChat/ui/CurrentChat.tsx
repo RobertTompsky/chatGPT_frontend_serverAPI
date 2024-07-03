@@ -1,7 +1,8 @@
 import {
-    IChat,
+    IChatFeatureProps,
+    IMessage,
     getChatMessages,
-    getChats,
+    getChatsByType,
     getDisplayedField
 } from '@/entities/chat/model';
 import React from 'react';
@@ -15,10 +16,13 @@ import {
 import { useAppSelector } from '@/shared/lib/hooks';
 import { MessageList } from '@/entities/chat/ui';
 
-export const CurrentChat: React.FC = () => {
-    const chats: IChat[] = useAppSelector(getChats)
-    const messages = useAppSelector(getChatMessages)
-    const displayedField = useAppSelector(getDisplayedField)
+export const CurrentChat: React.FC<IChatFeatureProps> = ({chatType}) => {
+    const chats = useAppSelector((state) => 
+        getChatsByType(state, chatType))
+    const chatMessages = useAppSelector((state) =>
+        getChatMessages(state, chatType)) as IMessage[]
+    const displayedField = useAppSelector((state) => 
+        getDisplayedField(state, chatType))
 
     return (
         <>
@@ -27,18 +31,18 @@ export const CurrentChat: React.FC = () => {
                     key={chat.id}
                     className={styles.curChat}>
                     {
-                        messages &&
-                        messages.length > 0 &&
-                        <MessageList />
+                        chatMessages &&
+                        chatMessages.length > 0 &&
+                        <MessageList chatType={chatType} />
                     }
                     <div className={styles.curChat_bottom}>
                         <div className={styles.curChat_settings}>
-                            <ChangeDisplayedField />
-                            <ChangeMemoryLength />
+                            <ChangeDisplayedField chatType={chatType}/>
+                            <ChangeMemoryLength chatType={chatType} />
                         </div>
                         {
                             displayedField && displayedField === 'request'
-                                ? <SendMessage />
+                                ? <SendMessage chatType={chatType} />
                                 : <EditPrompt />
                         }
                     </div>

@@ -1,55 +1,73 @@
 import { Button, TextArea } from '@/shared/ui/components';
 import React, { useState } from 'react';
 import {
+    IChatFeatureProps,
     IMessage,
-    addMessage,
+    addChatMessage,
     getChatMessages,
     getMemoryLength,
     getModel,
     getSystemPrompt,
-    setGPTTyping
+    setChatAITyping
 } from '@/entities/chat/model';
 import styles from './SendMessage.module.scss'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
 import { sendMessageThunk } from '@/entities/chat/model/slices/chatsSlice';
+import { streamResponse } from '@/entities/chat/lib';
+import { PayloadAction } from '@reduxjs/toolkit';
 
-export const SendMessage: React.FC = () => {
+export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
     const dispatch = useAppDispatch()
-    const chatMessages = useAppSelector(getChatMessages) as IMessage[]
+
+    const chatMessages = useAppSelector((state) =>
+        getChatMessages(state, chatType)) as IMessage[]
     const chatModel = useAppSelector(getModel)
     const chatPrompt = useAppSelector(getSystemPrompt)
-    const chatMemoryLengh = useAppSelector(getMemoryLength) as number
+    const chatMemoryLength = useAppSelector((state) =>
+        getMemoryLength(state, chatType)) as number
+
     const [userMessage, setUserMessage] = useState<string>('')
 
-    const sendUserMessage =
-        async (
-            e: React.MouseEvent<HTMLButtonElement, MouseEvent> |
-                React.KeyboardEvent<HTMLTextAreaElement>
-        ) => {
-            e.preventDefault();
-            if (!userMessage.trim()) return;
+    const sendUserMessage = async (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent> |
+            React.KeyboardEvent<HTMLTextAreaElement>
+    ) => {
+        e.preventDefault();
+        if (!userMessage.trim()) return;
 
-            const newMessage: IMessage = {
-                content: userMessage,
-                role: 'human' as 'human'
-            };
-
-            setUserMessage('');
-
-            dispatch(addMessage(newMessage))
-            dispatch(setGPTTyping(true))
-
-            const lastHistory = chatMessages.slice(-chatMemoryLengh)
-            const messagesToSend = [...lastHistory, newMessage]
-
-            console.log(messagesToSend)
-
-            dispatch(sendMessageThunk({
-                messages: messagesToSend,
-                model: chatModel,
-                systemPrompt: chatPrompt as string
-            }))
+        const newMessage: IMessage = {
+            content: userMessage,
+            role: 'human' as 'human'
         };
+        const lastHistory = chatMessages.slice(-chatMemoryLength)
+        const messagesToSend = [...lastHistory, newMessage]
+
+        setUserMessage('');
+
+        dispatch(addChatMessage({
+            chatType,
+            message: newMessage
+        }))
+        dispatch(setChatAITyping({
+            type: chatType,
+            isProcessing: true
+        }))
+
+        switch (chatType) {
+            case 'chat':
+                const response = await dispatch(sendMessageThunk({
+                    messages: messagesToSend,
+                    model: chatModel,
+                    systemPrompt: chatPrompt as string
+                })) as PayloadAction<Response>
+
+                await streamResponse(response.payload, dispatch, 'chat')
+                
+                break
+            case 'qa':
+                break
+        }
+    };
 
     return (
         <div className={styles.sendMessage}>

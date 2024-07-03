@@ -7,17 +7,16 @@ import {
     DeleteChat,
     SearchMessage
 } from '@/features/chat';
-import { Button } from '@/shared/ui/components';
 
 export const ChatManagement: React.FC = () => {
     return (
         <section className={styles.block}>
-            <CreateChat />
+            <CreateChat chatType='chat'/>
             <div className={styles.group}>
                 <SearchMessage />
-                <ChangeChat />
+                <ChangeChat chatType='chat'/>
                 <ChangeModel />
-                <DeleteChat />
+                <DeleteChat chatType='chat'/>
             </div>
         </section>
     );

@@ -10,9 +10,9 @@ export const ChangeModel: React.FC = () => {
     return (
         <Select
             defaultOptionTitle='Выбрать модель'
-            options={MODELS.map((model) => ({
-                value: model.model,
-                title: model.title
+            options={MODELS.map(({title, value}) => ({
+                value,
+                title
             }))}
             value={model}
             onChange={(e) =>

@@ -1,10 +1,10 @@
-import { GPTModel, IMessage } from '@/entities/chat/model';
+import { IMessage } from '@/entities/chat/model';
 import { openai } from '@/shared/api';
 
 export const getChatCompletion = async (
     messages: IMessage[],
     newMessage: IMessage,
-    model: GPTModel
+    model: string
 ) => {
     return openai.chat.completions.create({
         messages: [...messages, newMessage].map((message) => ({

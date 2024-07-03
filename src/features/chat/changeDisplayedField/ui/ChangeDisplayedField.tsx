@@ -2,22 +2,32 @@ import React from 'react';
 import styles from './ChangeDisplayedField.module.scss'
 import { Select } from '@/shared/ui/components';
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
-import { FIELDS, changeDisplayedField, getDisplayedField } from '@/entities/chat/model';
+import { 
+    FIELDS, 
+    IChatDisplayedField, 
+    IChatFeatureProps, 
+    changeDisplayedField, 
+    getDisplayedField 
+} from '@/entities/chat/model';
 
-export const ChangeDisplayedField: React.FC = () => {
-    const field = useAppSelector(getDisplayedField)
+export const ChangeDisplayedField: React.FC<IChatFeatureProps> = ({chatType}) => {
+    const field = useAppSelector((state) => getDisplayedField(state, chatType))
     const dispatch = useAppDispatch()
     
     return (
         <Select
             defaultOptionTitle='Выбрать поле'
-            options={FIELDS.map((field) => ({
-                value: field.value,
-                title: field.title
+            options={FIELDS.map(({title, value}) => ({
+                value,
+                title
             }))}
             value={field}
             onChange={(e) => { 
-                dispatch(changeDisplayedField(e.target.value))
+                const value = e.target.value
+                dispatch(changeDisplayedField({
+                    chatType,
+                    displayedField: value as IChatDisplayedField
+                }))
             }}
         />
     );
