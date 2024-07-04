@@ -1,6 +1,14 @@
-import { IChatType, addChatMessage, setChatAITyping, streamChatAIMessage } from "@/entities/chat/model";
+import { 
+    IChatType, 
+    addChatMessage, 
+    setChatAIProcessing, 
+    streamChatAIMessage 
+} from "@/entities/chat/model";
 import { getReader } from "@/shared/lib/utils"
-import { ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+import { 
+    ThunkDispatch, 
+    UnknownAction 
+} from "@reduxjs/toolkit";
 
 export const streamResponse = async (
     response: Response,
@@ -9,7 +17,7 @@ export const streamResponse = async (
 ) => {
     const { reader, decoder } = getReader(response)
 
-    dispatch(setChatAITyping({
+    dispatch(setChatAIProcessing({
         type: chatType,
         isProcessing: false
     }))

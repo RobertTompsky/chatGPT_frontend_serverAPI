@@ -5,14 +5,9 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { prepareHeaders } from "..";
 
-const baseQuery = fetchBaseQuery({
-    baseUrl: `http://127.0.0.1:3001`,
-    /*
-    prepareHeaders: (
-        headers
-    ) => prepareHeaders(headers),
-    */
-});
+export const baseUrl = `${import.meta.env.VITE_SERVER_URL}`
+
+const baseQuery = fetchBaseQuery({baseUrl});
 
 const baseQueryWithRetry = retry(
     baseQuery,

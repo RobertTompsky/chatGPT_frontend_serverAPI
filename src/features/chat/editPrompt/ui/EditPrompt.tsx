@@ -2,12 +2,20 @@ import { TextArea, Button } from '@/shared/ui/components';
 import React, { useState } from 'react';
 import styles from './EditPrompt.module.scss'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
-import { editPrompt, getSystemPrompt } from '@/entities/chat/model';
+import { editPrompt, getSystemPrompt, IChatFeatureProps } from '@/entities/chat/model';
 
-export const EditPrompt: React.FC = () => {
-    const prompt = useAppSelector(getSystemPrompt)
+export const EditPrompt: React.FC<IChatFeatureProps> = ({chatType}) => {
+    const prompt = useAppSelector((state) => getSystemPrompt(state, chatType)) as string
     const [textValue, setTextValue] = useState<string>(prompt as string)
     const dispatch = useAppDispatch()
+
+    const handleSubmit = (e: React.SyntheticEvent) => {
+        e.preventDefault()
+        dispatch(editPrompt({
+            chatType,
+            prompt: textValue
+        }))
+    }
     
     return (
         <div className={styles.editPrompt}>
@@ -17,11 +25,7 @@ export const EditPrompt: React.FC = () => {
                 value={textValue}
                 onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault(); // Предотвращаем перенос строки
-                        dispatch(editPrompt({
-                            chatType: 'chat',
-                            prompt: textValue
-                        }))
+                        handleSubmit(e)
                     }
                 }}
                 style={{ width: '80%' }}
@@ -29,10 +33,7 @@ export const EditPrompt: React.FC = () => {
             <Button
                 children='Сохранить промпт'
                 variant='approve'
-                onClick={() => dispatch(editPrompt({
-                    chatType: 'chat',
-                    prompt: textValue
-                }))}
+                onClick={handleSubmit}
                 btnSize='small'
                 disabled={textValue === prompt}
             />

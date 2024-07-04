@@ -8,13 +8,12 @@ import {
     getMemoryLength,
     getModel,
     getSystemPrompt,
-    setChatAITyping
+    setChatAIProcessing
 } from '@/entities/chat/model';
 import styles from './SendMessage.module.scss'
 import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
-import { sendMessageThunk } from '@/entities/chat/model/slices/chatsSlice';
 import { streamResponse } from '@/entities/chat/lib';
-import { PayloadAction } from '@reduxjs/toolkit';
+import { sendMessageThunk } from '@/entities/chat/api';
 
 export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
     const dispatch = useAppDispatch()
@@ -22,16 +21,14 @@ export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
     const chatMessages = useAppSelector((state) =>
         getChatMessages(state, chatType)) as IMessage[]
     const chatModel = useAppSelector(getModel)
-    const chatPrompt = useAppSelector(getSystemPrompt)
+    const chatPrompt = useAppSelector((state) =>
+        getSystemPrompt(state, chatType))
     const chatMemoryLength = useAppSelector((state) =>
         getMemoryLength(state, chatType)) as number
 
     const [userMessage, setUserMessage] = useState<string>('')
 
-    const sendUserMessage = async (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent> |
-            React.KeyboardEvent<HTMLTextAreaElement>
-    ) => {
+    const sendUserMessage = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         if (!userMessage.trim()) return;
 
@@ -48,21 +45,29 @@ export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
             chatType,
             message: newMessage
         }))
-        dispatch(setChatAITyping({
+        dispatch(setChatAIProcessing({
             type: chatType,
             isProcessing: true
         }))
 
         switch (chatType) {
             case 'chat':
-                const response = await dispatch(sendMessageThunk({
+                dispatch(sendMessageThunk({
                     messages: messagesToSend,
                     model: chatModel,
                     systemPrompt: chatPrompt as string
-                })) as PayloadAction<Response>
+                }))
+                    .unwrap()
+                    .then((response) => {
+                        if (response) {
+                            streamResponse(
+                                response,
+                                dispatch,
+                                'chat'
+                            )
+                        }
+                    })
 
-                await streamResponse(response.payload, dispatch, 'chat')
-                
                 break
             case 'qa':
                 break

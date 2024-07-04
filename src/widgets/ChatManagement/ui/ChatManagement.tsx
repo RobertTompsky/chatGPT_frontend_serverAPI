@@ -7,16 +7,31 @@ import {
     DeleteChat,
     SearchMessage
 } from '@/features/chat';
+import { IChatFeatureProps } from '@/entities/chat/model';
+import { combinedClassNames } from '@/shared/lib/helpers';
 
-export const ChatManagement: React.FC = () => {
+export const ChatManagement: React.FC<IChatFeatureProps> = ({chatType}) => {
+
+    const sectionClassName = combinedClassNames(
+        styles.management,
+        styles[chatType]
+    )
+
+    const groupClassName = combinedClassNames(
+        styles.group,
+        styles[chatType]
+    )
+
     return (
-        <section className={styles.block}>
-            <CreateChat chatType='chat'/>
+        <section className={sectionClassName}>
+            <div className={groupClassName}>
+                <CreateChat chatType={chatType} />
+                <ChangeChat chatType={chatType} />
+                <ChangeModel />
+            </div>
             <div className={styles.group}>
                 <SearchMessage />
-                <ChangeChat chatType='chat'/>
-                <ChangeModel />
-                <DeleteChat chatType='chat'/>
+                <DeleteChat chatType={chatType} />
             </div>
         </section>
     );

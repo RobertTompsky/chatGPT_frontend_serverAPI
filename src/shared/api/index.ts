@@ -1,3 +1,3 @@
 export { prepareHeaders } from "./utils/prepareHeaders";
-export { api } from "./baseApi/baseApi";
+export { api, baseUrl } from "./baseApi/baseApi";
 export { openai } from "./openAI/openAIApi";

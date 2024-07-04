@@ -14,7 +14,7 @@ export const SearchMessage: React.FC = () => {
 
     return (
         <Input
-            placeholder='Поиск...'
+            placeholder='Поиск сообщения...'
             onChange={handleSearch}
         />
     );

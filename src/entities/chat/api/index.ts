@@ -1,1 +1,3 @@
-export { getChatCompletion } from "./getChatCompletion/getChatCompletion";
+export { sendMessageThunk } from "./thunks/thunks";
+
+

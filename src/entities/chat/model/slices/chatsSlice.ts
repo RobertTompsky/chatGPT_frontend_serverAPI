@@ -1,13 +1,11 @@
 import { RootState } from "@/shared/lib/types";
 import {
     PayloadAction,
-    createAsyncThunk,
     createSlice
 } from "@reduxjs/toolkit";
 import {
     IChat,
     IChatDisplayedField,
-    IChatRequest,
     IChatType,
     IMessage
 } from "..";
@@ -87,7 +85,7 @@ const chatSlice = createSlice({
                 targetChat.isActive = true;
             }
         },
-        setChatAITyping: (state, action: PayloadAction<{
+        setChatAIProcessing: (state, action: PayloadAction<{
             type: IChatType,
             isProcessing: boolean
         }>) => {
@@ -171,61 +169,6 @@ const chatSlice = createSlice({
     }
 })
 
-export const sendMessageThunk = createAsyncThunk(
-    'chats/sendMessage',
-    async (req: IChatRequest, { dispatch }) => {
-        try {
-            const { messages, model, systemPrompt } = req
-
-            const response = await fetch(
-                `${import.meta.env.VITE_SERVER_URL}/chat/send_message`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        messages,
-                        model,
-                        systemPrompt
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
-            return response
-
-            const rs = response.body as ReadableStream<Uint8Array>;
-            const reader = rs.getReader();
-            const decoder = new TextDecoder("utf-8");
-
-            dispatch(setChatAITyping({
-                type: 'chat',
-                isProcessing: false
-            }))
-            dispatch(addChatMessage({
-                chatType: 'chat',
-                message: {
-                    role: 'ai' as 'ai',
-                    content: ''
-                }
-            }));
-
-            while (true) {
-                const { value, done } = await reader.read();
-                const chunk = decoder.decode(value, { stream: true });
-                //console.log(chunk);
-                dispatch(streamChatAIMessage({
-                    chatType: 'chat',
-                    content: chunk
-                }));
-                if (done) break;
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-);
-
 export const chatReducer = chatSlice.reducer
 
 export const {
@@ -237,7 +180,7 @@ export const {
     editPrompt,
     changeModel,
     changeMemoryLength,
-    setChatAITyping,
+    setChatAIProcessing,
     searchMessage,
     changeDisplayedField,
     setInitialState
@@ -246,6 +189,10 @@ export const {
 export const getChatsByType
     = (state: RootState, chatType: IChatType) => state.chats.list
         .filter((chat) => chat.type === chatType)
+
+export const getActiveChatByType
+    = (state: RootState, chatType: IChatType) => state.chats.list
+        .find((chat) => chat.isActive === true && chat.type === chatType)
 
 export const getChatMessages
     = (state: RootState, chatType: IChatType) => state.chats.list
@@ -256,13 +203,13 @@ export const getModel
     = (state: RootState) => state.chats.model
 
 export const getChatAIProcessing
-    = (state: RootState) => state.chats.list
-        .find((chat) => chat.isActive === true)
-        ?.isAIProcessing
+    = (state: RootState, chatType: IChatType) => state.chats.list
+        .find((chat) => chat.isActive === true && chat.type === chatType)
+        ?.systemPrompt
 
 export const getSystemPrompt
-    = (state: RootState) => state.chats.list
-        .find((chat) => chat.isActive === true)
+    = (state: RootState, chatType: IChatType) => state.chats.list
+        .find((chat) => chat.isActive === true && chat.type === chatType)
         ?.systemPrompt
 
 export const getDisplayedField

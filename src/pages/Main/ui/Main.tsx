@@ -8,7 +8,7 @@ export const Main: React.FC = () => {
     return (
         <Container>
             <div className={styles.mainPage}>
-                <ChatManagement />
+                <ChatManagement chatType='chat'/>
                 <CurrentChat chatType='chat'/>
             </div>
         </Container>

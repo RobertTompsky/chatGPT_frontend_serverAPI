@@ -43,7 +43,7 @@ export const CurrentChat: React.FC<IChatFeatureProps> = ({chatType}) => {
                         {
                             displayedField && displayedField === 'request'
                                 ? <SendMessage chatType={chatType} />
-                                : <EditPrompt />
+                                : <EditPrompt chatType={chatType}/>
                         }
                     </div>
                 </section>

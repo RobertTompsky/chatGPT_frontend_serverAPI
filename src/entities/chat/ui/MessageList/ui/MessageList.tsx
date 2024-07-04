@@ -13,7 +13,8 @@ import { Message } from '../..';
 export const MessageList: React.FC<IChatFeatureProps> = ({chatType}) => {
     const chatMessages = useAppSelector((state) =>
         getChatMessages(state, chatType)) as IMessage[]
-    const isAIProcessing = useAppSelector(getChatAIProcessing) as boolean
+    const isAIProcessing = useAppSelector((state) => 
+        getChatAIProcessing(state, chatType))
     const query = useAppSelector(state => state.chats.query)
 
     const filteredMessages = chatMessages

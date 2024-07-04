@@ -1,14 +1,28 @@
-.block {
+.management {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 
     .group {
-        @extend .block;
-        gap: 4px;
-        height: 20px;
-        width: 50%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+    }
+}
+
+.chat {
+    flex-direction: row;
+}
+
+.qa {
+    flex-direction: column;
+    gap: 10px;
+    .group {
+        width: 100%;
     }
 }
 
