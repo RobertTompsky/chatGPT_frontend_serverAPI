@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styles from './MessageList.module.scss'
-import { MessageLoader } from '@/shared/ui/loaders';
+import { TextLoader } from '@/shared/ui/loaders';
 import {
     IMessage,
     getChatMessages,
     getChatAIProcessing,
     IChatFeatureProps
 } from '@/entities/chat/model';
-import { useAppSelector } from '@/shared/lib/hooks';
+import { 
+    useAppSelector, 
+    useScrollToBottom 
+} from '@/shared/lib/hooks';
 import { Message } from '../..';
 
 export const MessageList: React.FC<IChatFeatureProps> = ({chatType}) => {
+    const messageListRef = useRef<HTMLElement>(null)
+
+    useScrollToBottom(messageListRef)
+
     const chatMessages = useAppSelector((state) =>
         getChatMessages(state, chatType)) as IMessage[]
     const isAIProcessing = useAppSelector((state) => 
@@ -22,9 +29,8 @@ export const MessageList: React.FC<IChatFeatureProps> = ({chatType}) => {
             .toLowerCase()
             .includes(query.toLowerCase()))
 
-
     return (
-        <nav className={styles.messageList}>
+        <nav className={styles.messageList} ref={messageListRef}>
             {filteredMessages.map((message, index) => (
                 <Message
                     message={message}
@@ -32,7 +38,7 @@ export const MessageList: React.FC<IChatFeatureProps> = ({chatType}) => {
                 />
             ))}
             {isAIProcessing &&
-                <MessageLoader />
+                <TextLoader text='Ожидание ответа'/>
             }
         </nav>
     );

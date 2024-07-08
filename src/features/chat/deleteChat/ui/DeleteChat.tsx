@@ -1,46 +1,46 @@
-import { 
-    IChatFeatureProps, 
-    getActiveChatByType, 
-    getChatsByType, 
-    removeChat, 
+import {
+    IChatFeatureProps,
+    getActiveChatByType,
+    getChatsByType,
+    removeChat,
     setChatActive
 } from '@/entities/chat/model';
-import { 
-    useAppDispatch, 
-    useAppSelector 
+import {
+    useAppDispatch,
+    useAppSelector
 } from '@/shared/lib/hooks';
 import { Button } from '@/shared/ui/components';
 import React from 'react';
 
 export const DeleteChat: React.FC<IChatFeatureProps> = ({ chatType }) => {
-    const chats = useAppSelector((state) => 
+    const chats = useAppSelector((state) =>
         getChatsByType(state, chatType))
-    const activeChat = useAppSelector((state) => 
+    const activeChat = useAppSelector((state) =>
         getActiveChatByType(state, chatType))
     const dispatch = useAppDispatch()
 
     const handleDeleteChat = (): void => {
-        const lastChat = chats[chats.length - 1]
+        const activeChatIndex = chats.findIndex(chat => chat === activeChat)
+        const previousChat = chats[activeChatIndex - 1]
+        const nextChat = chats[activeChatIndex + 1]
+        const chatToSetActive = previousChat || nextChat
+
         dispatch(removeChat(chatType))
-        if (lastChat) {
+
+        if (chatToSetActive) {
             dispatch(setChatActive({
-                id: lastChat.id,
+                id: chatToSetActive.id,
                 type: chatType
             }))
         }
     }
 
     return (
-        <>
-            {chats.length > 0 &&
-                <Button
-                    variant='delete'
-                    children='Удалить чат'
-                    btnSize='small'
-                    onClick={handleDeleteChat}
-                    disabled={!activeChat}
-                />
-            }
-        </>
+        <Button
+            variant='delete'
+            children='Удалить чат'
+            btnSize='small'
+            onClick={handleDeleteChat}
+        />
     );
 };

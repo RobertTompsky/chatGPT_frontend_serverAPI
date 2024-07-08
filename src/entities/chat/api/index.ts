@@ -1,3 +1,6 @@
-export { sendMessageThunk } from "./thunks/thunks";
+export { 
+    sendMessageThunk, 
+    sendQaMessageThunk 
+} from "./thunks/thunks";
 
 

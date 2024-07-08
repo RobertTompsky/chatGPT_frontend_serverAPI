@@ -1,12 +1,16 @@
 import { Button, Input } from '@/shared/ui/components';
 import React, { useState } from 'react';
 import styles from './CreateChat.module.scss'
-import { IChat, IChatFeatureProps, createChat } from '@/entities/chat/model';
+import { 
+    IChat, 
+    IChatFeatureProps, 
+    createChat 
+} from '@/entities/chat/model';
 import { handleInputChange } from '@/shared/lib/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { useAppDispatch } from '@/shared/lib/hooks';
 
-export const CreateChat: React.FC<IChatFeatureProps> = ({chatType}) => {
+export const CreateChat: React.FC<IChatFeatureProps> = ({ chatType }) => {
     const dispatch = useAppDispatch()
 
     const [chat, setChat] = useState<IChat>({
@@ -14,16 +18,16 @@ export const CreateChat: React.FC<IChatFeatureProps> = ({chatType}) => {
         name: '',
         type: chatType,
         messages: [],
-        memoryLength: 0, 
+        memoryLength: 0,
         systemPrompt: '',
         isActive: false,
         isAIProcessing: false,
         displayedField: 'request'
     })
-    
+
     const handleCreateChat = (): void => {
         if (!chat.name.trim()) return;
-      
+
         dispatch(createChat({
             id: uuidv4(),
             name: chat.name,
@@ -41,7 +45,11 @@ export const CreateChat: React.FC<IChatFeatureProps> = ({chatType}) => {
     return (
         <div className={styles.createChat}>
             <Input
-                placeholder='Создать чат'
+                placeholder={
+                    chatType === 'chat'
+                        ? 'Создать чат...'
+                        : 'Создать qa-чат...'
+                }
                 value={chat.name}
                 name='name'
                 onChange={(e) => handleInputChange(e, setChat)}

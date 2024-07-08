@@ -4,7 +4,7 @@ export const docApi = api.injectEndpoints({
     endpoints: (builder) => ({
         addFileDoc: builder.mutation<{ message: string }, FormData>({
             query: (body) => ({
-                url: '/chat/upload_doc',
+                url: '/doc/addFileDoc',
                 method: "POST",
                 body
             }),
@@ -13,7 +13,7 @@ export const docApi = api.injectEndpoints({
         }),
         addWebDoc: builder.mutation<{ message: string }, {url: string}>({
             query: (body) => ({
-                url: '/chat/addWebDoc',
+                url: '/doc/addWebDoc',
                 method: "POST",
                 body
             })

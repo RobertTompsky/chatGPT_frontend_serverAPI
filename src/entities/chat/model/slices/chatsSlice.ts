@@ -205,7 +205,7 @@ export const getModel
 export const getChatAIProcessing
     = (state: RootState, chatType: IChatType) => state.chats.list
         .find((chat) => chat.isActive === true && chat.type === chatType)
-        ?.systemPrompt
+        ?.isAIProcessing
 
 export const getSystemPrompt
     = (state: RootState, chatType: IChatType) => state.chats.list

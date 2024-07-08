@@ -28,9 +28,9 @@ export type IChatBody = Omit<IChat, 'id'>
 export interface IChatRequest {
     messages: IMessage[],
     model: string,
-    systemPrompt: string
+    prompt: string
 }
 
-export interface IQaRequest {
-    messages: IMessage[]
+export interface IQaRequest extends IChatRequest {
+    sessionId: string
 }

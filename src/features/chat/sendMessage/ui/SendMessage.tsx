@@ -1,45 +1,46 @@
 import { Button, TextArea } from '@/shared/ui/components';
 import React, { useState } from 'react';
 import {
+    IChat,
     IChatFeatureProps,
     IMessage,
     addChatMessage,
-    getChatMessages,
-    getMemoryLength,
+    getActiveChatByType,
     getModel,
-    getSystemPrompt,
     setChatAIProcessing
 } from '@/entities/chat/model';
 import styles from './SendMessage.module.scss'
-import { useAppDispatch, useAppSelector } from '@/shared/lib/hooks';
+import { 
+    useAppDispatch, 
+    useAppSelector 
+} from '@/shared/lib/hooks';
 import { streamResponse } from '@/entities/chat/lib';
-import { sendMessageThunk } from '@/entities/chat/api';
+import { 
+    sendMessageThunk, 
+    sendQaMessageThunk 
+} from '@/entities/chat/api';
 
 export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
     const dispatch = useAppDispatch()
 
-    const chatMessages = useAppSelector((state) =>
-        getChatMessages(state, chatType)) as IMessage[]
+    const chat = useAppSelector((state) => 
+        getActiveChatByType(state, chatType)) as IChat
     const chatModel = useAppSelector(getModel)
-    const chatPrompt = useAppSelector((state) =>
-        getSystemPrompt(state, chatType))
-    const chatMemoryLength = useAppSelector((state) =>
-        getMemoryLength(state, chatType)) as number
 
-    const [userMessage, setUserMessage] = useState<string>('')
+    const [content, setContent] = useState<string>('')
 
     const sendUserMessage = async (e: React.SyntheticEvent) => {
         e.preventDefault();
-        if (!userMessage.trim()) return;
+        if (!content.trim()) return;
 
         const newMessage: IMessage = {
-            content: userMessage,
+            content,
             role: 'human' as 'human'
         };
-        const lastHistory = chatMessages.slice(-chatMemoryLength)
+        const lastHistory = chat.messages.slice(-chat.memoryLength)
         const messagesToSend = [...lastHistory, newMessage]
 
-        setUserMessage('');
+        setContent('');
 
         dispatch(addChatMessage({
             chatType,
@@ -55,21 +56,29 @@ export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
                 dispatch(sendMessageThunk({
                     messages: messagesToSend,
                     model: chatModel,
-                    systemPrompt: chatPrompt as string
+                    prompt: chat.systemPrompt
                 }))
                     .unwrap()
                     .then((response) => {
                         if (response) {
-                            streamResponse(
-                                response,
-                                dispatch,
-                                'chat'
-                            )
+                            streamResponse(response, dispatch, 'chat')
                         }
                     })
 
                 break
             case 'qa':
+                dispatch(sendQaMessageThunk({
+                    sessionId: chat.id,
+                    messages: messagesToSend,
+                    model: chatModel,
+                    prompt: chat.systemPrompt
+                }))
+                    .unwrap()
+                    .then((response) => {
+                        if (response) {
+                            streamResponse(response, dispatch, 'qa')
+                        }
+                    })
                 break
         }
     };
@@ -78,11 +87,11 @@ export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
         <div className={styles.sendMessage}>
             <TextArea
                 placeholder='Введите сообщение...'
-                onChange={(e) => setUserMessage(e.target.value)}
-                value={userMessage}
+                onChange={(e) => setContent(e.target.value)}
+                value={content}
                 onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault(); // Предотвращаем перенос строки
+                        e.preventDefault();
                         sendUserMessage(e);
                     }
                 }}
@@ -91,8 +100,8 @@ export const SendMessage: React.FC<IChatFeatureProps> = ({ chatType }) => {
             <Button
                 children='Отправить'
                 variant='approve'
-                onClick={sendUserMessage}
                 btnSize='small'
+                onClick={sendUserMessage}
             />
         </div>
     );

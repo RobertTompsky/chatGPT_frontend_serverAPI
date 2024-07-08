@@ -23,7 +23,8 @@ export const store = configureStore({
                     PERSIST,
                     PURGE,
                     REGISTER,
-                    'chats/sendMessage/fulfilled'
+                    'chats/sendChatMessage/fulfilled',
+                    'chats/sendQaMessage/fulfilled'
                 ],
             }
         }).concat(api.middleware)

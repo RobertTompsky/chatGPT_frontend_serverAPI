@@ -2,9 +2,9 @@ import {
     useAddFileDocMutation,
     useAddWebDocMutation
 } from '@/entities/doc/api';
-import { 
-    handleInputChange, 
-    handleSetFile 
+import {
+    handleInputChange,
+    handleSetFile
 } from '@/shared/lib/functions';
 import {
     Input,
@@ -13,10 +13,11 @@ import {
     Form,
     Select
 } from '@/shared/ui/components';
-import { MessageLoader } from '@/shared/ui/loaders';
+import { TextLoader } from '@/shared/ui/loaders';
 import React, { useState } from 'react';
 import styles from './createDoc.module.scss'
 import { DOC_TYPES, IDoc } from '@/entities/doc/model';
+import { Feedback } from '@/shared/ui/notifications';
 
 export const CreateDoc: React.FC = () => {
     const [doc, setDoc] = useState<IDoc>({
@@ -29,13 +30,19 @@ export const CreateDoc: React.FC = () => {
 
     const [uploadDocFile, {
         isLoading: isFileLoading,
-        isSuccess: isFileSuccess
+        isSuccess: isFileSuccess,
+        isError: isFileError
     }] = useAddFileDocMutation()
 
     const [addWebDocToDB, {
         isLoading: isWebLoading,
-        isSuccess: isWebSuccess
+        isSuccess: isWebSuccess,
+        isError: isWebError
     }] = useAddWebDocMutation()
+
+    const isLoading = isFileLoading || isWebLoading
+    const isSuccess = isFileSuccess || isWebSuccess
+    const isError = isFileError || isWebError
 
     const uploadDoc = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -53,7 +60,9 @@ export const CreateDoc: React.FC = () => {
                 setFeedBack(response as string)
 
             } else {
-                const response = await addWebDocToDB({ url: doc.url as string })
+                const response = await addWebDocToDB({
+                    url: doc.url as string
+                })
                     .unwrap()
                     .then((res) => res.message)
 
@@ -61,6 +70,7 @@ export const CreateDoc: React.FC = () => {
             }
         } catch (error) {
             console.log(error)
+            setFeedBack('Ошибка загрузки документа')
         }
     }
     return (
@@ -89,10 +99,11 @@ export const CreateDoc: React.FC = () => {
                             placeholder='Название документа...'
                             onChange={(e) => { handleInputChange(e, setDoc) }}
                             value={doc.name}
-                            name='docName'
+                            name='name'
                         />
                         <UploadLabel
                             title='Выбрать файл'
+                            file={file}
                             htmlFor='file'
                         />
                         <Input
@@ -117,12 +128,25 @@ export const CreateDoc: React.FC = () => {
             />
 
             {
-                (isFileLoading || isWebLoading) &&
-                <MessageLoader />
+                isLoading
+                &&
+                <TextLoader text='Обработка на сервере' />
             }
             {
-                (isFileSuccess || isWebSuccess) &&
-                <p>{feedBack}</p>
+                isSuccess
+                &&
+                <Feedback
+                    message={feedBack}
+                    type='success'
+                />
+            }
+            {
+                isError
+                &&
+                <Feedback
+                    message={feedBack}
+                    type='error'
+                />
             }
         </Form>
     );

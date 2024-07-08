@@ -6,9 +6,7 @@ import React from 'react';
 export const SearchMessage: React.FC = () => {
     const dispatch = useAppDispatch()
 
-    const handleSearch = (
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(searchMessage(e.target.value))
     }
 

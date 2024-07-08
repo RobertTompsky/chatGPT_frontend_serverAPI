@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import styles from './Header.module.scss'
 import { Container } from '@/shared/ui/layout';
 import { RoutePath } from '@/app/router';
-import { useAppSelector } from '@/shared/lib/hooks/redux';
 import { LogOut } from '@/features/user';
 import ProfileLogo from '@/assets/profile.svg'
 import { AppLink, Dropdown } from '@/shared/ui/components';
+import { useAppSelector } from '@/shared/lib/hooks';
 
 export const Header: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
